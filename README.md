@@ -52,3 +52,37 @@ export default tseslint.config({
   },
 })
 ```
+# Real-time Markdown Editor with Live Preview
+
+A modern, responsive Markdown editor with real-time preview functionality. Built with React and NestJS.
+
+## Features
+
+- Real-time Markdown to HTML conversion
+- Syntax highlighting for code blocks
+- Dark mode support
+- Local storage for auto-saving content
+- File upload/download capabilities
+- Responsive design for all device sizes
+
+## Tech Stack
+
+### Frontend
+- React with TypeScript
+- Tailwind CSS for styling
+- React Markdown for rendering
+- Syntax highlighting with react-syntax-highlighter
+
+### Backend
+- NestJS framework
+- Marked library for Markdown processing
+
+## Getting Started
+
+### Prerequisites
+- Node.js (v14 or later)
+- npm or yarn
+
+### Installation
+
+#### Frontend
