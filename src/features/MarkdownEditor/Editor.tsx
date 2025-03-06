@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { debounce } from "../../lib/utils";
 
 interface EditorProps {
-  value: string;
   onChange: (value: string) => void;
   content?: string;
 }
