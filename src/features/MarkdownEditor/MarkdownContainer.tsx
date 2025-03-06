@@ -42,7 +42,7 @@ const MarkdownContainer: React.FC = () => {
 
   return (
     <div className="markdown-editor">
-      <Editor value={markdown} onChange={setMarkdown} />
+      <Editor content={markdown} onChange={setMarkdown} />
       <Preview html={html} />
       {/* <div className="fixed bottom-4 right-4">
         <button
