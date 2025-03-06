@@ -4,13 +4,14 @@ import { debounce } from "../../lib/utils";
 interface EditorProps {
   value: string;
   onChange: (value: string) => void;
+  content?: string;
 }
 
 const DEFAULT_MARKDOWN = "# Welcome to the Markdown Editor\n\nStart typing your markdown here...";
 
 
-const Editor: React.FC<EditorProps> = ({ value, onChange }) => {
-  const [localValue, setLocalValue] = useState(value);
+const Editor: React.FC<EditorProps> = ({ onChange, content }) => {
+  const [localValue, setLocalValue] = useState(content || DEFAULT_MARKDOWN);
 
   // Use the debounce utility function
   const debouncedOnChange = useCallback(
@@ -28,8 +29,8 @@ const Editor: React.FC<EditorProps> = ({ value, onChange }) => {
 
   // Update local value when prop changes
   useEffect(() => {
-    setLocalValue(value || DEFAULT_MARKDOWN);
-  }, [value]);
+    setLocalValue(content || DEFAULT_MARKDOWN);
+  }, [content]);
 
   return (
     <div className="editor-pane h-screen">

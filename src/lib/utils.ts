@@ -1,23 +1,20 @@
-import { clsx, type ClassValue } from "clsx";
+import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function debounce<T extends (...args: unknown[]) => void>(
-  func: T,
-  wait: number
-): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout | null = null;
+export function debounce<T extends (...params: unknown[]) => void>(
+  fn: T,
+  delay: number
+) {
+  let timeoutID: NodeJS.Timeout | undefined;
 
-  return function (...args: Parameters<T>) {
-    if (timeout) {
-      clearTimeout(timeout);
+  return function (...params: Parameters<T>) {
+    if (timeoutID) {
+      clearTimeout(timeoutID);
     }
-
-    timeout = setTimeout(() => {
-      func(...args);
-    }, wait);
+    timeoutID = setTimeout(() => fn(...params), delay);
   };
 }
