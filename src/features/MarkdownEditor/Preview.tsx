@@ -442,7 +442,6 @@ const Preview: React.FC<PreviewProps> = ({
     return result;
   };
 
-  console.log("renderContent()", renderContent());
   return (
     <div
       className={`preview-pane flex flex-col h-screen ${

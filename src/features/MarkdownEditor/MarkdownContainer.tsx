@@ -4,32 +4,37 @@ import Preview from "./Preview";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { debounce } from "@/lib/utils";
 import { DEFAULT_MARKDOWN } from "@/constants/defaultMarkdown";
+import { convertMarkdownToHtml } from "@/services/markdownService";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MarkdownContainer = ({ markdown, setMarkdown }) => {
   const [html, setHtml] = useState<string>("");
 
-  const convertMarkdownToHtml = useCallback(async (text: string) => {
+  const handleMarkdownConversion = useCallback(async (text: string) => {
+    // Skip API call if text is empty or only whitespace
+    if (!text || !text.trim()) {
+      setHtml(""); // Clear the HTML when markdown is empty
+      return;
+    }
+
     try {
-      const response = await fetch("http://localhost:8000/v1/markdown", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ markdown: text }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to convert markdown");
-      }
-
-      const data = await response.json();
-      setHtml(data.html);
+      const htmlContent = await convertMarkdownToHtml(text);
+      setHtml(htmlContent);
     } catch (error) {
-      console.error("Error converting markdown:", error);
+      console.error("Error in markdown conversion:", error);
+      toast.error("Failed to convert markdown. Please try again later.", {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   }, []);
 
-  const debouncedConvert = debounce(convertMarkdownToHtml, 300);
+  const debouncedConvert = debounce(handleMarkdownConversion, 300);
 
   useEffect(() => {
     debouncedConvert(markdown);
@@ -39,14 +44,20 @@ const MarkdownContainer = ({ markdown, setMarkdown }) => {
     <div className="markdown-editor h-full flex flex-col md:flex-row">
       <Editor content={markdown} onChange={setMarkdown} />
       <Preview html={html} />
-      {/* <div className="fixed bottom-4 right-4">
-        <button
-          onClick={() => {}}
-          className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-md text-sm"
-        >
-          Using: Backend API
-        </button>
-      </div> */}
+      
+      {/* Toast container for notifications */}
+      <ToastContainer 
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 };

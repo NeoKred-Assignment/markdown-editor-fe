@@ -5,15 +5,13 @@ import { Button } from "../components/ui/button";
 interface MainLayoutProps {
   children: ReactNode;
   onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onDownload: () => void;
-  onClear: () => void;
+  onDownload?: () => void;
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({
   children,
   onUpload,
   onDownload,
-  onClear
 }) => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
@@ -23,46 +21,14 @@ const MainLayout: React.FC<MainLayoutProps> = ({
             Real-time Markdown Editor
           </h1>
           <div className="flex items-center space-x-3">
-            <input
-              type="file"
-              accept=".md"
-              id="upload"
-              className="hidden"
-              onChange={onUpload}
-            />
-            <label htmlFor="upload">
-              <Button
-                variant="customBlue"
-                size="default"
-              >
-                Upload
-              </Button>
-            </label>
-            <Button
-              onClick={onDownload}
-              variant="customFuchsia"
-              size="default"
-            >
-              Download
-            </Button>
-            <Button
-              onClick={onClear}
-              variant="customBlue"
-              size="default"
-            >
-              Clear
-            </Button>
-
             <ThemeToggle />
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-6 py-4 mt-6">
-        {children}
-      </main>
+      <main className="container mx-auto px-4 py mt-6">{children}</main>
     </div>
   );
 };
 
-export default MainLayout; 
+export default MainLayout;

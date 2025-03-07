@@ -77,7 +77,7 @@ body {
 .editor-pane {
   background-color: white;
   border-right: 1px solid var(--gray-200);
-  height: 85vh;
+  height: 80vh;
 }
 
 .dark .editor-pane {

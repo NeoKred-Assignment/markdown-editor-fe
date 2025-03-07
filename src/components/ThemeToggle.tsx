@@ -19,7 +19,7 @@ const ThemeToggle: React.FC = () => {
         <TooltipTrigger asChild>
           <button
             onClick={toggleTheme}
-            className="w-12 h-12 rounded-xl bg-gray-800 flex items-center justify-center"
+            className="w-12 h-12 rounded-xl bg-gray-800 flex items-center justify-center cursor-pointer"
             aria-label={tooltipText}
           >
             {isDarkMode ? (
