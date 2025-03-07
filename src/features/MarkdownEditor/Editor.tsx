@@ -3,19 +3,24 @@ import { debounce } from "../../lib/utils";
 import { Button } from "@/components/ui/button";
 import { ThemeProvider, useTheme } from "../../context/ThemeContext";
 import ClearConfirmationDialog from "@/components/ClearConfirmationDialog";
+import FileUploadModal from "@/components/FileUploadModal";
+import { Download, Upload, Eraser } from "lucide-react"; 
 
 interface EditorProps {
   onChange: (value: string) => void;
   content?: string;
+  isLoading?: boolean;
+  setIsLoading?: (loading: boolean) => void;
 }
 
 const DEFAULT_MARKDOWN =
   "# Welcome to the Markdown Editor\n\nStart typing your markdown here...";
 
-const Editor: React.FC<EditorProps> = ({ onChange, content }) => {
+const Editor: React.FC<EditorProps> = ({ onChange, content, isLoading = false, setIsLoading = () => {} }) => {
   const [localValue, setLocalValue] = useState(content || DEFAULT_MARKDOWN);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [showClearDialog, setShowClearDialog] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
 
   const { theme } = useTheme();
 
@@ -47,6 +52,7 @@ const Editor: React.FC<EditorProps> = ({ onChange, content }) => {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     setLocalValue(newValue);
+    
     debouncedOnChange(newValue);
   };
 
@@ -69,31 +75,50 @@ const Editor: React.FC<EditorProps> = ({ onChange, content }) => {
     URL.revokeObjectURL(url);
   };
 
+  const handleFileUpload = (fileContent: string) => {
+    setLocalValue(fileContent);
+    
+    onChange(fileContent);
+    localStorage.setItem("markdown-content", fileContent);
+  };
+
   return (
     <ThemeProvider>
-      <div className="editor-pane h-[80vh]">
+      <div className="editor-pane h-[85vh]">
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-bold mb-2">Markdown</h2>
 
           <div className="flex items-center gap-2">
+            {isLoading && (
+              <span className="text-sm text-gray-500 animate-pulse">
+                Processing...
+              </span>
+            )}
             <Button
               onClick={handleDownload}
               variant="customBlue"
               size="sm"
               className={`ml-auto`}
             >
+              <Download size={16} className="mr-2 h-4 w-4" />
               Download
             </Button>
             <Button
-              onClick={handleDownload}
-              variant="customBlue"
+              onClick={() => setShowUploadModal(true)}
+              variant="customGreen"
               size="sm"
               className={`ml-auto`}
             >
+              <Upload size={16} className="mr-2 h-4 w-4" />
               Upload File
             </Button>
 
-            <Button onClick={handleClear} variant="customBlue" size="default">
+            <Button
+              onClick={handleClear}
+              variant="customFuchsia"
+              size="sm"
+            >
+              <Eraser size={16} className="mr-2 h-4 w-4" />
               Clear
             </Button>
           </div>
@@ -112,6 +137,12 @@ const Editor: React.FC<EditorProps> = ({ onChange, content }) => {
         open={showClearDialog}
         onOpenChange={setShowClearDialog}
         onConfirm={confirmClear}
+      />
+
+      <FileUploadModal
+        open={showUploadModal}
+        onOpenChange={setShowUploadModal}
+        onFileUpload={handleFileUpload}
       />
     </ThemeProvider>
   );

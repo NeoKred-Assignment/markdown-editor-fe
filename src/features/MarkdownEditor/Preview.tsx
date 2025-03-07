@@ -16,6 +16,8 @@ import {
   okaidia,
 } from "react-syntax-highlighter/dist/esm/styles/prism";
 import "./Preview.css";
+import Lottie from "lottie-react";
+import loadingAnimation from "@/assets/loading-txt.json";
 
 // Theme interface
 type ThemeOption = {
@@ -70,6 +72,7 @@ interface PreviewProps {
   html?: string;
   prefersDarkMode?: boolean;
   initialTheme?: string;
+  isLoading?: boolean;
 }
 
 function useTableHeaderFix(html: string | undefined, processedContent: string) {
@@ -129,9 +132,11 @@ const Preview: React.FC<PreviewProps> = ({
   html,
   prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches,
   initialTheme,
+  isLoading = false,
 }) => {
   console.log("html", html);
   const [processedContent, setProcessedContent] = useState<string>("");
+  const [showSource, setShowSource] = useState<boolean>(false);
   const [selectedTheme, setSelectedTheme] = useState<ThemeOption>(() => {
     if (initialTheme) {
       const theme = THEMES.find(
@@ -452,15 +457,15 @@ const Preview: React.FC<PreviewProps> = ({
         color: selectedTheme.isDark ? "#abb2bf" : "#383a42",
       }}
     >
-      <div 
-        className="preview-header sticky top-0 z-10 p-4 border-b"
+      <div
+        className="preview-header sticky top-0 z-10 p-4 border-b flex justify-between items-center"
         style={{
           backgroundColor: selectedTheme.isDark ? "#21252b" : "#f5f5f5",
           borderColor: selectedTheme.isDark ? "#181a1f" : "#e0e0e0",
         }}
       >
-        <h2 className="text-lg font-bold mb-2">Preview</h2>
-        <div className="theme-controls">
+        <h2 className="text-lg font-bold">Preview</h2>
+        <div className="theme-controls flex items-center gap-3">
           <select
             value={selectedTheme.name}
             onChange={(e) => {
@@ -483,16 +488,121 @@ const Preview: React.FC<PreviewProps> = ({
               </option>
             ))}
           </select>
+          <button
+            onClick={() => setShowSource(!showSource)}
+            style={{
+              backgroundColor: selectedTheme.isDark ? "#21252b" : "#f5f5f5",
+              color: showSource
+                ? selectedTheme.accentColor
+                : selectedTheme.isDark
+                ? "#abb2bf"
+                : "#383a42",
+              border: `1px solid ${
+                selectedTheme.isDark ? "#181a1f" : "#e0e0e0"
+              }`,
+              borderRadius: "3px",
+              padding: "4px 12px",
+              fontWeight: showSource ? "bold" : "normal",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+            }}
+          >
+            {showSource ? (
+              <>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                Preview
+              </>
+            ) : (
+              <>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="16 18 22 12 16 6"></polyline>
+                  <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+                Source
+              </>
+            )}
+          </button>
         </div>
       </div>
       <div
-        className="preview-content markdown-body flex-1 overflow-auto p-4"
+        className="preview-content markdown-body flex-1 overflow-auto p-4 relative"
         style={{
           backgroundColor: selectedTheme.isDark ? "#282c34" : "#ffffff",
           color: selectedTheme.isDark ? "#abb2bf" : "#383a42",
         }}
       >
-        {renderContent()}
+        {isLoading && (
+          <div className="mt-10 pt-7  flex items-center justify-center bg-white/50 dark:bg-gray-900/50 z-10">
+            <div className="w-32 h-32">
+          
+              <div style={{ transform: "scale(0.7)" }}>
+                <Lottie
+                  animationData={loadingAnimation}
+                  loop={true}
+                  style={{ width: "100%", height: "100%", marginTop: "120px" }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showSource ? (
+          <div className="code-block-wrapper">
+            <div
+              className="code-header"
+              style={{
+                backgroundColor: selectedTheme.isDark ? "#21252b" : "#f0f0f0",
+                borderBottom: `1px solid ${
+                  selectedTheme.isDark ? "#181a1f" : "#e0e0e0"
+                }`,
+              }}
+            >
+              <span
+                className="code-language-tag"
+                style={{ color: selectedTheme.accentColor }}
+              >
+                HTML
+              </span>
+            </div>
+            <SyntaxHighlighter
+              language="html"
+              style={selectedTheme.style}
+              showLineNumbers={true}
+              customStyle={{
+                margin: 0,
+                borderRadius: "0 0 4px 4px",
+              }}
+            >
+              {html || ""}
+            </SyntaxHighlighter>
+          </div>
+        ) : (
+          renderContent()
+        )}
       </div>
     </div>
   );

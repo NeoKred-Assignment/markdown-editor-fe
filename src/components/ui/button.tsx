@@ -69,6 +69,16 @@ function Button({
       "bg-fuchsia-950 border-fuchsia-950 text-white hover:bg-fuchsia-900 hover:border-fuchsia-900",
     customRose:
       "bg-rose-500 border-rose-500 text-white hover:bg-rose-600 hover:border-rose-600",
+    customGreen:
+      "bg-emerald-600 border-emerald-600 text-white hover:bg-emerald-700 hover:border-emerald-700",
+    customIndigo:
+      "bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700 hover:border-indigo-700",
+    customAmber:
+      "bg-amber-500 border-amber-500 text-white hover:bg-amber-600 hover:border-amber-600",
+    customTeal:
+      "bg-teal-600 border-teal-600 text-white hover:bg-teal-700 hover:border-teal-700",
+    customPurple:
+      "bg-purple-600 border-purple-600 text-white hover:bg-purple-700 hover:border-purple-700",
   };
 
   // Simple size mapping

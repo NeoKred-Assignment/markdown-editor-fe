@@ -16,7 +16,13 @@ const App: React.FC = () => {
   );
 
 
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement> | string) => {
+    if (typeof e === 'string') {
+      setMarkdown(e);
+      return;
+    }
+    
+    // Handle file input change event
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();

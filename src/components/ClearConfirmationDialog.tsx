@@ -42,7 +42,7 @@ const ClearConfirmationDialog: React.FC<ClearConfirmationDialogProps> = ({
             </Button>
           </DialogClose>
           <Button 
-            variant="customBlue" 
+            variant="customTeal" 
             size="default"
             onClick={onConfirm}
           >
