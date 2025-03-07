@@ -3,14 +3,9 @@ import Editor from "./Editor";
 import Preview from "./Preview";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { debounce } from "@/lib/utils";
+import { DEFAULT_MARKDOWN } from "@/constants/defaultMarkdown";
 
-const DEFAULT_MARKDOWN = `# Welcome to Markdown Editor...`;
-
-const MarkdownContainer: React.FC = () => {
-  const [markdown, setMarkdown] = useLocalStorage(
-    "markdown-content",
-    DEFAULT_MARKDOWN
-  );
+const MarkdownContainer = ({ markdown, setMarkdown }) => {
   const [html, setHtml] = useState<string>("");
 
   const convertMarkdownToHtml = useCallback(async (text: string) => {
@@ -41,7 +36,7 @@ const MarkdownContainer: React.FC = () => {
   }, [markdown, debouncedConvert]);
 
   return (
-    <div className="markdown-editor">
+    <div className="markdown-editor h-full flex flex-col md:flex-row">
       <Editor content={markdown} onChange={setMarkdown} />
       <Preview html={html} />
       {/* <div className="fixed bottom-4 right-4">

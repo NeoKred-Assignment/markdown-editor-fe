@@ -1,38 +1,17 @@
-import React from "react";
-import ThemeToggle from "./components/ThemeToggle";
-import Button from "./components/Button";
+import React, { useState } from "react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import MarkdownContainer from "./features/MarkdownEditor/MarkdownContainer";
-
-// Sample markdown for initial content
-const DEFAULT_MARKDOWN = `# Welcome to Markdown Editor
-
-## Features
-- Real-time preview
-- Syntax highlighting
-- Dark mode support
-
-## Code Example
-\`\`\`javascript
-function greeting(name) {
-  return \`Hello, \${name}!\`;
-}
-\`\`\`
-
-## Table Example
-| Name | Age | Occupation |
-|------|-----|------------|
-| John | 30  | Developer  |
-| Jane | 25  | Designer   |
-
-Enjoy writing markdown!
-`;
+import { DEFAULT_MARKDOWN } from "./constants/defaultMarkdown";
+import MainLayout from "./layout/MainLayout";
+import ClearConfirmationDialog from "./components/ClearConfirmationDialog";
+import { ThemeProvider } from "./context/ThemeContext";
 
 const App: React.FC = () => {
   const [markdown, setMarkdown] = useLocalStorage(
     "markdown-content",
     DEFAULT_MARKDOWN
   );
+  const [showClearDialog, setShowClearDialog] = useState(false);
 
   const handleDownload = () => {
     const blob = new Blob([markdown], { type: "text/markdown" });
@@ -59,45 +38,34 @@ const App: React.FC = () => {
   };
 
   const handleClear = () => {
-    if (window.confirm("Are you sure you want to clear the editor?")) {
-      setMarkdown("");
-    }
+    setShowClearDialog(true);
+  };
+
+  const confirmClear = () => {
+    setMarkdown("# Welcome to the Markdown Editor\n\nStart typing your markdown here...");
+    localStorage.setItem("markdown-content", "# Welcome to the Markdown Editor\n\nStart typing your markdown here...");
+    setShowClearDialog(false);
   };
 
   return (
-    <div className="min-h-screen">
-      <header className="bg-white dark:bg-gray-800 shadow-sm">
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          <h1 className="text-xl font-bold">Real-time Markdown Editor</h1>
-          <div className="flex space-x-2">
-            <input
-              type="file"
-              accept=".md"
-              id="upload"
-              className="hidden"
-              onChange={handleUpload}
-            />
-            <label htmlFor="upload">
-              <Button onClick={() => {}} className="cursor-pointer">
-                Upload
-              </Button>
-            </label>
-            <Button onClick={handleDownload}>Download</Button>
-            <Button
-              onClick={handleClear}
-              className="bg-red-600 hover:bg-red-700"
-            >
-              Clear
-            </Button>
-            <ThemeToggle />
-          </div>
-        </div>
-      </header>
-
-      <main>
-        <MarkdownContainer />
-      </main>
-    </div>
+    <ThemeProvider>
+      <MainLayout
+        onUpload={handleUpload}
+        onDownload={handleDownload}
+        onClear={handleClear}
+      >
+        <MarkdownContainer 
+          markdown={markdown} 
+          setMarkdown={setMarkdown} 
+        />
+      </MainLayout>
+      
+      <ClearConfirmationDialog
+        open={showClearDialog}
+        onOpenChange={setShowClearDialog}
+        onConfirm={confirmClear}
+      />
+    </ThemeProvider>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { debounce } from "../../lib/utils";
 
 interface EditorProps {
@@ -8,15 +8,15 @@ interface EditorProps {
 
 const DEFAULT_MARKDOWN = "# Welcome to the Markdown Editor\n\nStart typing your markdown here...";
 
-
 const Editor: React.FC<EditorProps> = ({ onChange, content }) => {
   const [localValue, setLocalValue] = useState(content || DEFAULT_MARKDOWN);
-
-  // Use the debounce utility function
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  
+  // Create a properly memoized debounced function
   const debouncedOnChange = useCallback(
-    (text: string) => {
-      debounce(() => onChange(text), 300)();
-    },
+    debounce((text: string) => {
+      onChange(text);
+    }, 300),
     [onChange]
   );
 
@@ -28,13 +28,16 @@ const Editor: React.FC<EditorProps> = ({ onChange, content }) => {
 
   // Update local value when prop changes
   useEffect(() => {
-    setLocalValue(content || DEFAULT_MARKDOWN);
+    if (content !== undefined && content !== localValue) {
+      setLocalValue(content || DEFAULT_MARKDOWN);
+    }
   }, [content]);
 
   return (
-    <div className="editor-pane h-screen">
+    <div className="editor-pane h-[85vh]">
       <h2 className="text-lg font-bold mb-2">Markdown</h2>
       <textarea
+        ref={textareaRef}
         className="editor-textarea"
         value={localValue}
         onChange={handleChange}

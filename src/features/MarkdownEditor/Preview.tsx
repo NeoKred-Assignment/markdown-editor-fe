@@ -72,6 +72,59 @@ interface PreviewProps {
   initialTheme?: string;
 }
 
+function useTableHeaderFix(html: string | undefined, processedContent: string) {
+  useEffect(() => {
+    // Function to fix tables
+    const fixTableHeaders = () => {
+      // Find all tables in the document
+      const tables = document.querySelectorAll(".markdown-table");
+
+      tables.forEach((table) => {
+        // Check if this table has a thead element
+        let thead = table.querySelector("thead");
+
+        if (!thead || !thead.offsetHeight) {
+          console.log("Found table with missing or hidden header");
+
+          // Look for the first row which might be intended as header
+          const firstRow = table.querySelector("tr:first-child");
+
+          if (firstRow) {
+            // Create a new thead if needed
+            if (!thead) {
+              thead = document.createElement("thead");
+              table.insertBefore(thead, table.firstChild);
+            }
+
+            // Move the first row to the thead
+            thead.appendChild(firstRow);
+
+            // Convert td to th if needed
+            const cells = firstRow.querySelectorAll("td");
+            cells.forEach((cell) => {
+              const th = document.createElement("th");
+              th.innerHTML = cell.innerHTML;
+              th.className = cell.className;
+              cell.parentNode.replaceChild(th, cell);
+            });
+          }
+        }
+      });
+    };
+
+    // Run the fix after a short delay to ensure content is rendered
+    const timeoutId = setTimeout(fixTableHeaders, 500);
+
+    // Also run on window resize as layout shifts might hide headers
+    window.addEventListener("resize", fixTableHeaders);
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("resize", fixTableHeaders);
+    };
+  }, [html, processedContent]); // Now these are valid dependencies
+}
+
 const Preview: React.FC<PreviewProps> = ({
   html,
   prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches,
@@ -90,9 +143,31 @@ const Preview: React.FC<PreviewProps> = ({
     return prefersDarkMode ? THEMES[1] : THEMES[0]; // Material Dark or Material Light
   });
 
+  const decodeHtmlEntities = (html: string): string => {
+    const textArea = document.createElement("textarea");
+    textArea.innerHTML = html;
+    return textArea.value;
+  };
+
   const sanitizedContent = useMemo(() => {
     if (!html) return { __html: "" };
-    return { __html: DOMPurify.sanitize(html) };
+
+    // Fix any encoded quotes in HTML attributes before sanitizing
+    let fixedHtml = html
+      .replace(/&ldquo;/g, '"')
+      .replace(/&rdquo;/g, '"')
+      .replace(/&quot;/g, '"');
+
+    // General entity decoder as a fallback
+    fixedHtml = decodeHtmlEntities(fixedHtml);
+
+    return {
+      __html: DOMPurify.sanitize(fixedHtml, {
+        ADD_ATTR: ["controls", "preload", "playsinline", "poster"],
+        ADD_TAGS: ["audio", "video", "source"],
+        FORBID_ATTR: [], // Don't forbid any attributes by default
+      }),
+    };
   }, [html]);
 
   useEffect(() => {
@@ -145,10 +220,78 @@ const Preview: React.FC<PreviewProps> = ({
     processHTML();
   }, [html]);
 
+  useEffect(() => {
+    // Configure DOMPurify to properly handle media elements
+    DOMPurify.addHook("afterSanitizeAttributes", function (node) {
+      // Fix audio and video elements
+      if (node.tagName === "AUDIO" || node.tagName === "VIDEO") {
+        node.setAttribute("controls", "controls");
+        node.setAttribute("preload", "metadata");
+
+        if (node.tagName === "VIDEO") {
+          node.setAttribute("playsinline", "playsinline");
+        }
+      }
+
+      // Fix source elements
+      if (node.tagName === "SOURCE") {
+        // Ensure src attribute is preserved
+        if (node.hasAttribute("src")) {
+          const src = node.getAttribute("src");
+          if (src) {
+            // Clean the URL if needed
+            const cleanSrc = src
+              .replace(/&ldquo;/g, '"')
+              .replace(/&rdquo;/g, '"')
+              .replace(/&quot;/g, '"');
+            node.setAttribute("src", cleanSrc);
+          }
+        }
+      }
+    });
+  }, []);
+
+  // Pass the required parameters to the hook
+  useTableHeaderFix(html, processedContent);
+
   // Render the content with syntax highlighting
   const renderContent = () => {
     if (!processedContent) {
-      return <div dangerouslySetInnerHTML={sanitizedContent} />;
+      // Directly fix table headers in the sanitized content
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = sanitizedContent.__html;
+
+      // Find tables and fix their headers
+      const tables = tempDiv.querySelectorAll(".markdown-table");
+      tables.forEach((table) => {
+        const thead = table.querySelector("thead");
+        const firstRow = table.querySelector("tr:first-child");
+
+        if (firstRow && (!thead || !thead.contains(firstRow))) {
+          // Create thead if it doesn't exist
+          const newThead = document.createElement("thead");
+          newThead.appendChild(firstRow.cloneNode(true));
+
+          // Replace td with th in the header row
+          const cells = newThead.querySelectorAll("td");
+          cells.forEach((cell) => {
+            const th = document.createElement("th");
+            th.innerHTML = cell.innerHTML;
+            th.className = cell.className;
+            cell.parentNode.replaceChild(th, cell);
+          });
+
+          // Add the thead to the table
+          table.insertBefore(newThead, table.firstChild);
+
+          // Remove the original row if it's now in thead
+          if (thead !== firstRow.parentNode) {
+            firstRow.parentNode.removeChild(firstRow);
+          }
+        }
+      });
+
+      return <div dangerouslySetInnerHTML={{ __html: tempDiv.innerHTML }} />;
     }
 
     // Process block code elements
@@ -302,7 +445,7 @@ const Preview: React.FC<PreviewProps> = ({
   console.log("renderContent()", renderContent());
   return (
     <div
-      className={`preview-pane h-screen ${
+      className={`preview-pane flex flex-col h-screen ${
         selectedTheme.isDark ? "dark-theme" : "light-theme"
       }`}
       style={{
@@ -310,7 +453,13 @@ const Preview: React.FC<PreviewProps> = ({
         color: selectedTheme.isDark ? "#abb2bf" : "#383a42",
       }}
     >
-      <div className="preview-header">
+      <div 
+        className="preview-header sticky top-0 z-10 p-4 border-b"
+        style={{
+          backgroundColor: selectedTheme.isDark ? "#21252b" : "#f5f5f5",
+          borderColor: selectedTheme.isDark ? "#181a1f" : "#e0e0e0",
+        }}
+      >
         <h2 className="text-lg font-bold mb-2">Preview</h2>
         <div className="theme-controls">
           <select
@@ -338,7 +487,7 @@ const Preview: React.FC<PreviewProps> = ({
         </div>
       </div>
       <div
-        className="preview-content markdown-body"
+        className="preview-content markdown-body flex-1 overflow-auto p-4"
         style={{
           backgroundColor: selectedTheme.isDark ? "#282c34" : "#ffffff",
           color: selectedTheme.isDark ? "#abb2bf" : "#383a42",
