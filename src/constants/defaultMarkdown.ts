@@ -34,11 +34,9 @@ This is _italics_, this is **bold**, this is __underline__, and this is ~~strike
 
 Here's how to include an image with alt text and a title:
 
-![Alt text for screen readers](https://assets.digitalocean.com/logos/DO_Logo_horizontal_blue.png "DigitalOcean Logo")
 
-_We also support some extra syntax for setting the width, height and alignment of images. You can provide pixels (\`200\`/\`200px\`), or a percentage (\`50%\`), for the width/height. The alignment can be either \`left\` or \`right\`, with images being centered by default. These settings are all optional._
 
-![](https://assets.digitalocean.com/public/mascot.png)
+![Alt text for screen readers](https://images.pexels.com/photos/250591/pexels-photo-250591.jpeg?auto=compress&cs=tinysrgb&w=600)
 
 Use horizontal rules to break up long sections:
 
@@ -64,9 +62,6 @@ Rich transformations are also applied:
 
 ## Step 2 — Code
 
-This is \`inline code\`. This is a <^>variable<^>. This is an \`in-line code <^>variable<^>\`. You can also have [\`code\` in links](https://www.digitalocean.com).
-
-Here's a configuration file with a label:
 
 \`\`\`nginx
 [label /etc/nginx/sites-available/default]
@@ -77,14 +72,40 @@ server {
 \`\`\`
 
 
-Examples can have line numbers, and every code block has a 'Copy' button to copy just the code:
 
 \`\`\`line_numbers,js
 const test = 'hello';
-const other = 'world';
+const other = 'world 🚀';
 console.log(test, other);
 \`\`\`
 
+\`\`\`line_numbers,js
+// Utility function to simulate async operation
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Function to process a list of users and format output
+const processUsers = async (users) => {
+    console.log("Processing users...");
+
+    // Simulate async data fetching
+    await delay(1000);
+
+    return users.map((user, index) => ({
+        id: index + 1,
+        name: user.toUpperCase(),
+        role: user.includes("admin") ? "Administrator" : "User",
+    }));
+};
+
+// Sample user data
+const userList = ["alice", "bob", "charlie", "admin_john"];
+
+// Execute function
+(async () => {
+    const result = await processUsers(userList);
+    console.log("Processed Users:", result);
+})();
+\`\`\`
 
 Here's output from a command with a secondary label:
 
@@ -128,6 +149,20 @@ These may not be enabled in all contexts in the DigitalOcean community, but are 
 [rsvp_button 1234 "Marketo RSVP buttons use the \`rsvp_button\` flag"]
 
 [terminal ubuntu:focal Terminal buttons are behind the \`terminal\` flag]
+
+
+# Media Sample
+## Audio Sample  
+![Audio](https://imgs.search.brave.com/HuX6xatrcghkEO-5fYFGwmePtBbSQoW1BI1VGq93VVg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL00v/TVY1Qk1qUmlNRFZo/TURFdE5UUXdNUzAw/TUdGaExUazJOelV0/WkRFM05XSXlOMk16/TmpWaFhrRXlYa0Zx/Y0djQC5qcGc)  
+<audio controls>
+  <source src="https://ia803109.us.archive.org/34/items/perfectedsheeranmusicvideo/Perfect-%20ED%20SHEERAN%20%28Music%20Video%29.mp3" type="audio/mpeg">
+</audio>
+
+## Video Sample  
+
+<video controls width="700">
+  <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+</video>
 
 
 ## Conclusion

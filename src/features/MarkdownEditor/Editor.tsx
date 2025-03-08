@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeProvider, useTheme } from "../../context/ThemeContext";
 import ClearConfirmationDialog from "@/components/ClearConfirmationDialog";
 import FileUploadModal from "@/components/FileUploadModal";
-import { Download, Upload, Eraser } from "lucide-react"; 
+import { Download, Upload, Eraser } from "lucide-react";
 
 interface EditorProps {
   onChange: (value: string) => void;
@@ -16,7 +16,12 @@ interface EditorProps {
 const DEFAULT_MARKDOWN =
   "# Welcome to the Markdown Editor\n\nStart typing your markdown here...";
 
-const Editor: React.FC<EditorProps> = ({ onChange, content, isLoading = false, setIsLoading = () => {} }) => {
+const Editor: React.FC<EditorProps> = ({
+  onChange,
+  content,
+  isLoading = false,
+  setIsLoading = () => {},
+}) => {
   const [localValue, setLocalValue] = useState(content || DEFAULT_MARKDOWN);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [showClearDialog, setShowClearDialog] = useState(false);
@@ -52,7 +57,7 @@ const Editor: React.FC<EditorProps> = ({ onChange, content, isLoading = false, s
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     setLocalValue(newValue);
-    
+
     debouncedOnChange(newValue);
   };
 
@@ -77,16 +82,16 @@ const Editor: React.FC<EditorProps> = ({ onChange, content, isLoading = false, s
 
   const handleFileUpload = (fileContent: string) => {
     setLocalValue(fileContent);
-    
+
     onChange(fileContent);
     localStorage.setItem("markdown-content", fileContent);
   };
 
   return (
     <ThemeProvider>
-      <div className="editor-pane h-[85vh]">
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-bold mb-2">Markdown</h2>
+      <div className="editor-pane h-[85vh] w-full">
+        <div className="flex flex-row justify-between items-center gap-2 mb-2">
+          <h2 className="text-lg font-bold">Markdown</h2>
 
           <div className="flex items-center gap-2">
             {isLoading && (
@@ -94,38 +99,41 @@ const Editor: React.FC<EditorProps> = ({ onChange, content, isLoading = false, s
                 Processing...
               </span>
             )}
+
             <Button
               onClick={handleDownload}
               variant="customBlue"
               size="sm"
-              className={`ml-auto`}
+              className="text-xs cursor-pointer relative"
             >
-              <Download size={16} className="mr-2 h-4 w-4" />
-              Download
+              <Download size={16} className="h-4 w-4" />
+              <span className="hidden sm:inline ml-1">Download</span>
             </Button>
+
             <Button
               onClick={() => setShowUploadModal(true)}
               variant="customGreen"
               size="sm"
-              className={`ml-auto`}
+              className="text-xs cursor-pointer relative"
             >
-              <Upload size={16} className="mr-2 h-4 w-4" />
-              Upload File
+              <Upload size={16} className="h-4 w-4" />
+              <span className="hidden sm:inline ml-1">Upload File</span>
             </Button>
 
             <Button
               onClick={handleClear}
               variant="customFuchsia"
               size="sm"
+              className="text-xs cursor-pointer relative"
             >
-              <Eraser size={16} className="mr-2 h-4 w-4" />
-              Clear
+              <Eraser size={16} className="h-4 w-4" />
+              <span className="hidden sm:inline ml-1">Clear Content</span>
             </Button>
           </div>
         </div>
         <textarea
           ref={textareaRef}
-          className="editor-textarea"
+          className="editor-textarea w-full resize-none"
           value={localValue}
           onChange={handleChange}
           placeholder="Type your markdown here..."
