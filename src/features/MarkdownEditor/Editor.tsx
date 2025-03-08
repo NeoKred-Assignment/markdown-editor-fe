@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { ThemeProvider, useTheme } from "../../context/ThemeContext";
 import ClearConfirmationDialog from "@/components/ClearConfirmationDialog";
 import FileUploadModal from "@/components/FileUploadModal";
-import { Download, Upload, Eraser } from "lucide-react";
+import { Download, Upload, Eraser, SaveAll  } from "lucide-react";
+import { DEFAULT_MARKDOWN as defaultMarkdown } from "@/constants/defaultMarkdown";
 
 interface EditorProps {
   onChange: (value: string) => void;
@@ -55,6 +56,7 @@ const Editor: React.FC<EditorProps> = ({
     debouncedOnChange(newValue);
   };
 
+  // Update local value when prop changes
   useEffect(() => {
     if (content !== undefined && content !== localValue) {
       setLocalValue(content || DEFAULT_MARKDOWN);
@@ -80,6 +82,13 @@ const Editor: React.FC<EditorProps> = ({
     localStorage.setItem("markdown-content", fileContent);
   };
 
+  const handleSetDefault = () => {
+    setLocalValue(defaultMarkdown);
+    onChange(defaultMarkdown);
+    localStorage.setItem("markdown-content", defaultMarkdown);
+    
+  };
+
   return (
     <ThemeProvider>
       <div className="editor-pane h-[85vh] w-full">
@@ -101,6 +110,16 @@ const Editor: React.FC<EditorProps> = ({
             >
               <Download size={16} className="h-4 w-4" />
               <span className="hidden sm:inline ml-1">Download</span>
+            </Button>
+
+            <Button
+              onClick={handleSetDefault}
+              variant="customAmber"
+              size="sm"
+              className="text-xs cursor-pointer relative"
+            >
+              <SaveAll size={16} className="h-4 w-4" />
+              <span className="hidden sm:inline">Set Default</span>
             </Button>
 
             <Button
