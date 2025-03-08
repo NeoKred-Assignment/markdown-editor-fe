@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { lazy, Suspense } from "react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { DEFAULT_MARKDOWN } from "./constants/defaultMarkdown";
 import MainLayout from "./layout/MainLayout";

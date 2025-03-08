@@ -12,7 +12,7 @@ import { Button } from "../components/ui/button";
 
 interface ClearConfirmationDialogProps {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onOpenChange: () => void;
   onConfirm: () => void;
 }
 
