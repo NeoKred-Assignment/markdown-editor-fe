@@ -2,12 +2,12 @@ import React, { useState, lazy, Suspense } from "react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { DEFAULT_MARKDOWN } from "./constants/defaultMarkdown";
 import MainLayout from "./layout/MainLayout";
-import ClearConfirmationDialog from "./components/ClearConfirmationDialog";
 import { ThemeProvider } from "./context/ThemeContext";
 import Loader from "./components/Loader";
-
-// Lazy load the MarkdownContainer component
-const MarkdownContainer = lazy(() => import("./features/MarkdownEditor/MarkdownContainer"));
+import { ToastContainer } from "react-toastify";
+const MarkdownContainer = lazy(
+  () => import("./features/MarkdownEditor/MarkdownContainer")
+);
 
 const App: React.FC = () => {
   const [markdown, setMarkdown] = useLocalStorage(
@@ -15,14 +15,12 @@ const App: React.FC = () => {
     DEFAULT_MARKDOWN
   );
 
-
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement> | string) => {
-    if (typeof e === 'string') {
+    if (typeof e === "string") {
       setMarkdown(e);
       return;
     }
-    
-    // Handle file input change event
+
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
@@ -34,20 +32,15 @@ const App: React.FC = () => {
     }
   };
 
-
   return (
     <ThemeProvider>
-      <MainLayout
-        onUpload={handleUpload}
-      >
+      <ToastContainer />
+
+      <MainLayout onUpload={handleUpload}>
         <Suspense fallback={<Loader />}>
-          <MarkdownContainer 
-            markdown={markdown} 
-            setMarkdown={setMarkdown}
-          />
+          <MarkdownContainer markdown={markdown} setMarkdown={setMarkdown} />
         </Suspense>
       </MainLayout>
-    
     </ThemeProvider>
   );
 };

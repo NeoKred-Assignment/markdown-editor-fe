@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, Upload, X } from "lucide-react";
+import { toast } from 'react-toastify';
 
 interface FileUploadModalProps {
   open: boolean;
@@ -17,7 +18,6 @@ interface FileUploadModalProps {
   onFileUpload: (content: string) => void;
 }
 
-// 5MB in bytes
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 const FileUploadModal: React.FC<FileUploadModalProps> = ({
@@ -61,6 +61,11 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({
         if (file.size > MAX_FILE_SIZE) {
           setError("File size exceeds 5MB");
           setFile(null);
+          toast.warn("File size exceeds 5MB");
+        } else if (!file.name.endsWith('.md')) {
+          setError("Only Markdown files are allowed");
+          setFile(null);
+          toast.warn("Only Markdown files are allowed");
         } else {
           setFile(file);
           setError(null);
@@ -96,6 +101,11 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({
       if (file.size > MAX_FILE_SIZE) {
         setError("File size exceeds 5MB");
         setFile(null);
+        toast.warn("File size exceeds 5MB");
+      } else if (!file.name.endsWith('.md')) {
+        setError("Only Markdown files are allowed");
+        setFile(null);
+        toast.warn("Only Markdown files are allowed");
       } else {
         setFile(file);
         setError(null);

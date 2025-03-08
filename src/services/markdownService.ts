@@ -3,7 +3,6 @@ const API_BASE_URL = "http://localhost:8000";
 const MARKDOWN_ENDPOINT = "/v1/markdown";
 
 export const convertMarkdownToHtml = async (text: string): Promise<string> => {
-  // Return empty string for empty input
   if (!text || !text.trim()) {
     return "";
   }

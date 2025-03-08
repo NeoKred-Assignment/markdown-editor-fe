@@ -1,6 +1,6 @@
 import React from "react";
 import Lottie from "lottie-react";
-import loaderAnimation from "../assets/loader2.json"; // You'll need to add this file
+import loaderAnimation from "../assets/loader2.json";
 
 const Loader: React.FC = () => {
   return (

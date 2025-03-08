@@ -1,19 +1,15 @@
-/* Base styles for the preview pane */
 .preview-pane {
   padding: 1rem;
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  /* overflow: auto; */
   transition: background-color 0.3s ease, color 0.3s ease;
   display: flex;
   flex-direction: column;
   height: 85vh;
   overflow: hidden;
   border-radius: 10px;
-
 }
 
-/* Header styling */
 .preview-header {
   display: flex;
   justify-content: space-between;
@@ -34,15 +30,13 @@
   flex-grow: 1;
   overflow-y: auto;
   padding: 1rem;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .preview-content::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
 }
-
-/* // */
 
 .light-theme .preview-header {
   border-bottom-color: #e1e4e8;
@@ -52,7 +46,6 @@
   border-bottom-color: #3e4451;
 }
 
-/* Theme controls */
 .theme-controls {
   display: flex;
   align-items: center;
@@ -75,7 +68,6 @@
   box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.3);
 }
 
-/* Markdown body base styles */
 .markdown-body {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
@@ -83,7 +75,6 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Headings */
 .markdown-body h1,
 .markdown-body h2,
 .markdown-body h3,
@@ -116,7 +107,6 @@
   color: #e06c75;
 }
 
-/* Code blocks styling */
 .code-block-wrapper {
   margin: 1.5rem 0;
   border-radius: 6px;
@@ -164,7 +154,6 @@
   border-radius: 0 !important;
 }
 
-/* Inline code */
 .inline-code {
   display: inline-block;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -172,7 +161,6 @@
   margin: 0 2px;
 }
 
-/* Blockquotes */
 .markdown-body blockquote {
   padding: 0.5rem 1rem;
   margin: 1rem 0;
@@ -192,7 +180,6 @@
   color: #abb2bf;
 }
 
-/* Lists */
 .markdown-body ul,
 .markdown-body ol {
   padding-left: 2em;
@@ -230,7 +217,6 @@
   margin-bottom: 0.5em;
 }
 
-/* Links */
 .markdown-body a {
   text-decoration: none;
   transition: color 0.3s ease;
@@ -248,7 +234,6 @@
   text-decoration: underline;
 }
 
-/* Tables */
 .table-container {
   width: 100%;
   overflow-x: auto;
@@ -318,7 +303,6 @@
   background-color: #2d333b;
 }
 
-/* Table alignments */
 .markdown-table .align-left {
   text-align: left;
 }
@@ -331,14 +315,12 @@
   text-align: right;
 }
 
-/* Table images */
 .table-image {
   max-height: 50px;
   max-width: 100px;
   vertical-align: middle;
 }
 
-/* Media embeds */
 .video-embed,
 .audio-embed {
   margin: 1.5rem auto;
@@ -367,7 +349,7 @@
 .youtube-embed,
 .vimeo-embed {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  padding-bottom: 56.25%;
   height: 0;
   overflow: hidden;
   border-radius: 8px;
@@ -416,7 +398,6 @@
   background: linear-gradient(to right, #2d333b, #24292e);
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .code-header {
     flex-direction: column;
@@ -442,7 +423,7 @@
 
   .markdown-table th,
   .markdown-table td {
-    padding: 6px 8px; /* Smaller padding on mobile */
+    padding: 6px 8px;
   }
 }
 
@@ -468,11 +449,10 @@
   }
 }
 
-/* Images within markdown body */
 .markdown-body img {
   display: block;
-  margin: 1rem auto; /* Center the image with top and bottom margin */
-  max-width: 100%; /* Ensure it does not overflow */
+  margin: 1rem auto;
+  max-width: 100%;
 }
 
 .line-number {

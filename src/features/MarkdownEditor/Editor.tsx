@@ -20,16 +20,11 @@ const Editor: React.FC<EditorProps> = ({
   onChange,
   content,
   isLoading = false,
-  setIsLoading = () => {},
 }) => {
   const [localValue, setLocalValue] = useState(content || DEFAULT_MARKDOWN);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [showClearDialog, setShowClearDialog] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
-
-  const { theme } = useTheme();
-
-  console.log(theme, "theme");
 
   const handleClear = () => {
     setShowClearDialog(true);
@@ -46,7 +41,6 @@ const Editor: React.FC<EditorProps> = ({
     setShowClearDialog(false);
   };
 
-  // Create a properly memoized debounced function
   const debouncedOnChange = useCallback(
     debounce((text: string) => {
       onChange(text);
@@ -61,7 +55,6 @@ const Editor: React.FC<EditorProps> = ({
     debouncedOnChange(newValue);
   };
 
-  // Update local value when prop changes
   useEffect(() => {
     if (content !== undefined && content !== localValue) {
       setLocalValue(content || DEFAULT_MARKDOWN);

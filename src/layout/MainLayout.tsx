@@ -1,8 +1,6 @@
 import React, { ReactNode, useState } from "react";
 import ThemeToggle from "../components/ThemeToggle";
-import { Button } from "../components/ui/button";
 import FileUploadModal from "../components/FileUploadModal";
-import { Upload } from "lucide-react";
 
 interface MainLayoutProps {
   children: ReactNode;
