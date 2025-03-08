@@ -1,88 +1,44 @@
-# React + TypeScript + Vite
+## Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The frontend of the Real-Time Markdown Editor is designed to provide a seamless and interactive user experience. It is built using React with TypeScript, leveraging the power of Vite for fast builds and HMR (Hot Module Replacement).
 
-Currently, two official plugins are available:
+### Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Real-time Preview:** As you type Markdown in the text editor, the HTML preview updates instantly, showing how the content will appear on the web.
+- **Syntax Highlighting:** Code blocks within the Markdown are highlighted using `react-syntax-highlighter`, making it easier to read and understand code snippets.
+- **Dark Mode:** A toggleable dark mode is available to reduce eye strain and improve visibility in low-light conditions.
+- **Local Storage:** Your work is automatically saved to local storage, ensuring that you don't lose your progress even if you close the browser.
+- **File Operations:** You can upload Markdown files to edit them, or download your work as HTML files.
 
-## Expanding the ESLint configuration
+### Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **React with TypeScript:** Provides a robust framework for building user interfaces with strong typing.
+- **Tailwind CSS:** Utilized for rapid UI development and responsive design.
+- **Vite:** Used for building and serving the application, offering superior performance and fast refresh capabilities.
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### Getting Started
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
-# Real-time Markdown Editor with Live Preview
-
-A modern, responsive Markdown editor with real-time preview functionality. Built with React and NestJS.
-
-## Features
-
-- Real-time Markdown to HTML conversion
-- Syntax highlighting for code blocks
-- Dark mode support
-- Local storage for auto-saving content
-- File upload/download capabilities
-- Responsive design for all device sizes
-
-## Tech Stack
-
-### Frontend
-- React with TypeScript
-- Tailwind CSS for styling
-- React Markdown for rendering
-- Syntax highlighting with react-syntax-highlighter
-
-### Backend
-- NestJS framework
-- Marked library for Markdown processing
-
-## Getting Started
-
-### Prerequisites
+#### Prerequisites
 - Node.js (v14 or later)
-- npm or yarn
+- Yarn
 
-### Installation
+#### Installation
 
-#### Frontend
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/NeoKred-Assignment/markdown-editor-fe.git
+   cd markdown-editor-fe
+   ```
+
+2. Install dependencies using Yarn:
+   ```bash
+   yarn install
+   ```
+
+3. Start the development server:
+   ```bash
+   yarn dev
+   ```
+
+This will start the application on `localhost:3000` (or whichever port is configured). Navigate to this address in your web browser to start using the Markdown editor in development mode with live reloading.
+
