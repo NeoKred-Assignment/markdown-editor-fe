@@ -40,5 +40,5 @@ The frontend of the Real-Time Markdown Editor is designed to provide a seamless 
    yarn dev
    ```
 
-This will start the application on `localhost:3000` (or whichever port is configured). Navigate to this address in your web browser to start using the Markdown editor in development mode with live reloading.
+This will start the application on `http://localhost:5173/` (or whichever port is configured). Navigate to this address in your web browser to start using the Markdown editor in development mode with live reloading.
 
